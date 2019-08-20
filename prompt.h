@@ -1,9 +1,8 @@
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <unistd.h> 
-#include <errno.h> 
-#include <libgen.h>
-#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+struct stat s;
 void prompt(const char *file)
 {
 	int i,flag=0,x,pl=0;
@@ -12,8 +11,10 @@ void prompt(const char *file)
 	gethostname(hostbuffer,sizeof(hostbuffer));
 	userbuffer=getlogin();
 	getcwd(cwd,sizeof(cwd));
+	stat(file,&s);
 	path=realpath(file,NULL);
-	dirname(path);
+	if(!S_ISDIR(s.st_mode))
+		dirname(path);
 	int l1=strlen(path);
 	int l2=strlen(cwd);
 	if(l1<=l2)
