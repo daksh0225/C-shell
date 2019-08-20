@@ -6,10 +6,10 @@
 #include <string.h>
 void prompt(const char *file)
 {
-	int hostname,i,j,flag=0,x,pl=0;
-	char hostbuffer[256],*userbuffer,cwd[256],*path;
-	char *pp=(char *)malloc(sizeof(char)*256);
-	hostname=gethostname(hostbuffer,sizeof(hostbuffer));
+	int i,flag=0,x,pl=0;
+	char hostbuffer[1000],*userbuffer,cwd[1000],*path;
+	char *pp=(char *)malloc(sizeof(char)*1000);
+	gethostname(hostbuffer,sizeof(hostbuffer));
 	userbuffer=getlogin();
 	getcwd(cwd,sizeof(cwd));
 	path=realpath(file,NULL);
@@ -40,6 +40,8 @@ void prompt(const char *file)
 				}
 			}
 		}
+		else
+			pp=cwd;
 	}
 	else
 		pp=cwd;
