@@ -6,9 +6,17 @@ void cd(const char *file,char *a,char *b)
 		printf("cd: too many arguments\n");
 	else
 	{
-		if(a[0]=='~')
+		char *path;
+		path=(char *)malloc(1000);
+		if(strlen(a)==0)
 		{
-			char *c,*path;	
+			path=realpath(file,NULL);
+			dirname(path);
+			i=chdir(path);			
+		}
+		else if(a[0]=='~')
+		{
+			char *c;
 			c=(char *)malloc(sizeof(char)*1000);
 			path=realpath(file,NULL);
 			dirname(path);
@@ -19,10 +27,15 @@ void cd(const char *file,char *a,char *b)
 			i=chdir(path);
 		}
 		else
-			i=chdir(a);
+		{
+			strcpy(path,a);
+			i=chdir(path);
+		}
 		if(i!=0)
 		{
-			perror(0);
+			int ll=strlen(path);
+			path[ll]='\0';
+			printf("cd: no such file or directory: %s\n",path );
 		}
 	}
 }

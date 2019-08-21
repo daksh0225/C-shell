@@ -46,5 +46,7 @@ void prompt(const char *file)
 	}
 	else
 		pp=cwd;
+	int ll=strlen(pp);
+	pp[ll]='\0';
 	printf("<%s@%s:%s>", userbuffer,hostbuffer,pp);
 }

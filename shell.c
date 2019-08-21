@@ -10,6 +10,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <pwd.h>
+#include <grp.h>
+#include "ls.h"
+#include <time.h>
 
 int main(int argc, char const *argv[])
 {
@@ -17,9 +22,10 @@ int main(int argc, char const *argv[])
 	while(1)
 	{
 		char str[1000],*end_str;
-		int ss=0,flagecho=0,flagcd=0;
+		int ss=0,flagecho=0,flagcd=0,flagls=0;
 		if(strlen(cwd)==0)
 			cwd=realpath(argv[0],NULL);
+		printf("%s\n",cwd );
 		prompt(cwd);
 		scanf(" %[^\n]s",str);
 		char *token = strtok_r(str, ";",&end_str),*end_token; 
@@ -41,6 +47,11 @@ int main(int argc, char const *argv[])
 					flagcd=0;
 					break;
 				}
+				else if(flagls==1)
+				{
+					flagls=0;
+					break;
+				}
 				if(ss==0)
 				{
 					if(strcmp(to1,"pwd")==0)
@@ -53,7 +64,17 @@ int main(int argc, char const *argv[])
 					}
 					else if(strcmp(to1,"cd")==0)
 					{
-						flagcd=1;
+						if(strlen(end_token)==0)		
+						{				
+							cd(cwd,end_token,end_token);
+							break;
+						}
+						else
+							flagcd=1;
+					}
+					else if(strcmp(to1,"ls")==0)
+					{
+						ls(end_token);
 					}
 				}
 				to1=strtok_r(NULL," ",&end_token);
