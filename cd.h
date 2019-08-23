@@ -12,7 +12,6 @@ void cd(const char *file,char *a,char *b)
 		{
 			path=realpath(file,NULL);
 			dirname(path);
-			i=chdir(path);			
 		}
 		else if(a[0]=='~')
 		{
@@ -24,18 +23,13 @@ void cd(const char *file,char *a,char *b)
 			for(int j=1;j<l2;j++)
 				c[j-1]=a[j];
 			strcat(path,c);
-			i=chdir(path);
 		}
 		else
 		{
 			strcpy(path,a);
-			i=chdir(path);
 		}
+		i=chdir(path);
 		if(i!=0)
-		{
-			int ll=strlen(path);
-			path[ll]='\0';
 			printf("cd: no such file or directory: %s\n",path );
-		}
 	}
 }

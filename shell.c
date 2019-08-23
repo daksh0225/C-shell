@@ -15,17 +15,49 @@
 #include <grp.h>
 #include "ls.h"
 #include <time.h>
+#include "pinfo.h"
+#include "exec.h"
+#include <sys/wait.h>
+#include "backchk.h"
+
+char cwd[1000];
+
+void handle_int(int sig)
+{
+	pid_t pid;
+	int status;
+	char* exit=(char *)malloc(1000);
+	char* estatus=(char *)malloc(1000);
+	pid=waitpid(0,&status,WNOHANG);
+	printf("%d\n",pid );
+	sprintf(exit,"\npid %d exited.\n",pid);
+	if(WIFEXITED(status))
+	{
+		int ret=WEXITSTATUS(status);
+		if(ret==0)
+			sprintf(estatus, "normally\n");
+		else
+			sprintf(estatus, "abnormally\n");
+	}
+	if(pid>0)
+	{
+		write(2,exit,strlen(exit));
+		write(2,estatus,strlen(estatus));
+	}
+	free(exit);
+	prompt(cwd);
+	return;
+}
 
 int main(int argc, char const *argv[])
 {
-	char *cwd=(char *)malloc(1000);
 	while(1)
 	{
 		char str[1000],*end_str;
 		int ss=0,flagecho=0,flagcd=0,flagls=0;
+		a:
 		if(strlen(cwd)==0)
-			cwd=realpath(argv[0],NULL);
-		printf("%s\n",cwd );
+			strcpy(cwd,realpath(argv[0],NULL));
 		prompt(cwd);
 		scanf(" %[^\n]s",str);
 		char *token = strtok_r(str, ";",&end_str),*end_token; 
@@ -45,11 +77,6 @@ int main(int argc, char const *argv[])
 				{
 					cd(cwd,to1,end_token);
 					flagcd=0;
-					break;
-				}
-				else if(flagls==1)
-				{
-					flagls=0;
 					break;
 				}
 				if(ss==0)
@@ -74,7 +101,49 @@ int main(int argc, char const *argv[])
 					}
 					else if(strcmp(to1,"ls")==0)
 					{
-						ls(end_token);
+						ls(cwd,end_token);
+						break;
+					}
+					else if(strcmp(to1,"pinfo")==0)
+					{
+						pinfo(end_token);
+						break;
+					}
+					else if(strcmp(to1,"exit")==0)
+					{
+						exit(0);
+					}
+					else
+					{
+						pid_t pid=fork();
+						int status;
+						int pp;
+						char *chk_token=end_token;
+						pp=isback(chk_token);
+						if(pp)
+						{
+							if(pid==0)
+							{
+								exec(token,end_token);
+								exit(0);
+							}
+							else
+							{
+								signal(SIGCHLD,handle_int);
+							}
+						}
+						else
+						{
+							if(pid==0)
+							{
+								exec(token,end_token);
+								exit(0);
+							}
+							else
+							{
+								waitpid(pid,&status,0);
+							}
+						}
 					}
 				}
 				to1=strtok_r(NULL," ",&end_token);

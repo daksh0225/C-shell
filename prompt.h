@@ -8,6 +8,8 @@ void prompt(const char *file)
 	int i,flag=0,x,pl=0;
 	char hostbuffer[1000],*userbuffer,cwd[1000],*path;
 	char *pp=(char *)malloc(sizeof(char)*1000);
+	userbuffer=(char *)malloc(1000);
+	path=(char *)malloc(1000);
 	gethostname(hostbuffer,sizeof(hostbuffer));
 	userbuffer=getlogin();
 	getcwd(cwd,sizeof(cwd));
@@ -30,15 +32,38 @@ void prompt(const char *file)
 		}
 		if(flag==0)
 		{
-			pp[0]='~';
-			pl=1;
-			if(i!=l2)
+			if(l2>l1)
 			{
-				for(;i<l2;i++)
-				{
-					pp[pl]=cwd[i];
-					pl++;
+				if(cwd[l1]=='/')
+				{							
+					pp[0]='~';
+					pl=1;
+					if(i!=l2)
+					{
+						for(;i<l2;i++)
+						{
+							pp[pl]=cwd[i];
+							pl++;
+						}
+					}
+					pp[pl] = '\0';
 				}
+				else
+					pp=cwd;
+			}
+			else
+			{
+				pp[0]='~';
+				pl=1;
+				if(i!=l2)
+				{
+					for(;i<l2;i++)
+					{
+						pp[pl]=cwd[i];
+						pl++;
+					}
+				}
+				pp[pl] = '\0';
 			}
 		}
 		else
@@ -49,4 +74,5 @@ void prompt(const char *file)
 	int ll=strlen(pp);
 	pp[ll]='\0';
 	printf("<%s@%s:%s>", userbuffer,hostbuffer,pp);
+	fflush(stdout);
 }
