@@ -18,5 +18,7 @@ void exec(char a[], char b[])
 		token=strtok_r(NULL," ",&end_b);
 	}
 	arg[i]=NULL;
-	execvp(arg[0],arg);
+	int j=execvp(arg[0],arg);
+	if(j==-1)
+		printf("Error: command not found: %s\n",arg[0] );
 }

@@ -65,30 +65,35 @@ void ls(const char *file,char a[])
 	token=(char *)malloc(1000);
 	end_token=(char *)malloc(1000);
 	end_a=(char *)malloc(1000);
+	char cwd[1000];
+	getcwd(cwd,sizeof(cwd));
 	if(strlen(a)!=0)
 		token=strtok_r(a," ",&end_a);
 	else
 	{
 		token=NULL;
-		strcpy(dname,".");
+		strcpy(dname,cwd);
 	}
 	while(token!=NULL)
 	{
 		if(strcmp(token,"-a")==0)
 		{
 			f1=1;
-			strcpy(dname,".");
+			getcwd(cwd,sizeof(cwd));
+			strcpy(dname,cwd);
 		}
 		else if(strcmp(token,"-l")==0)
 		{
 			f2=1;
-			strcpy(dname,".");
+			getcwd(cwd,sizeof(cwd));
+			strcpy(dname,cwd);
 		}
 		else if(strcmp(token,"-la")==0||strcmp(token,"-al")==0)
 		{
 			f1=1;
 			f2=1;
-			strcpy(dname,".");
+			getcwd(cwd,sizeof(cwd));
+			strcpy(dname,cwd);
 		}
 		else
 		{
@@ -112,15 +117,21 @@ void ls(const char *file,char a[])
 					dirname(path);
 					for(int i=1;i<strlen(token);i++)
 						c[i-1]=a[i];
+					c[strlen(c)]='\0';
 					strcat(path,c);
 					strcpy(dname,path);
 				}
 				else
-					strcpy(dname,token);
+				{
+					strcat(cwd,"/");
+					strcat(cwd,token);
+					strcpy(dname,cwd);
+				}
 			}
 		}
 		token=strtok_r(NULL," ",&end_a);
 	}
+	// printf("%s\n",dname );
 	d = opendir(dname);
 	if (d)
 	{
@@ -146,5 +157,4 @@ void ls(const char *file,char a[])
 	}
 	else
 		printf("ls: cannot access '%s': No such file or directory\n",dname);
-		// perror(0);
 }

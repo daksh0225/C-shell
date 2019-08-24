@@ -22,6 +22,7 @@ void cd(const char *file,char *a,char *b)
 			int l2=strlen(a);
 			for(int j=1;j<l2;j++)
 				c[j-1]=a[j];
+			c[l2-1]='\0';
 			strcat(path,c);
 		}
 		else

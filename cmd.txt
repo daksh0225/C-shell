@@ -1,0 +1,139 @@
+cd /home
+ls
+ls -l
+ls -al
+cd ~
+cd ~
+cd ~
+ls
+ls -l
+cd ~
+exit
+ls
+ls -l
+cd 
+cd ~
+ls -l
+cd  ~
+ls
+cd ..
+cd ..
+ls
+exi
+exit
+cd ..
+cd ..
+pinfo
+pinfo
+./a.out
+pinfo
+ls
+pwd
+echo hello
+echo hlel e e e e
+cd .
+cd test
+cd tt
+cd tt t t
+cd /test/ttt
+ls -l
+cd ~
+ls -la
+ls -l -a test
+ls -l -a test
+ls -l test
+ls -l -a test
+ls -l 
+ls -al
+ls -l test
+ls -la test 
+ls -l test
+ls -l -a test
+ls -l
+ls -la
+exit
+ls
+ls -l
+ls -la
+ls -l test
+ls -la test
+ls
+ls -l
+ls -l -a
+ls -l test
+ls -l -a test
+ls test
+ls -l test
+ls test
+ls test
+ls 
+ls test
+ls -l
+ls -l test
+ls -l test
+ls -la test
+ls
+ls test
+ls test/tt
+ls -l
+cd test
+ls
+ls test
+ls -l test
+ls -l test
+ls
+ls test
+ls -l test
+cd test
+ls test
+ls test
+ls
+ls test
+ls -l test
+ls -l test
+ls test
+ls -a test
+ls -l test
+ls
+ls -l
+ls -l test
+ls
+sfsdfd
+touch hello
+rm hhhh
+rm hello
+quit
+exit
+nightswatch -n 2 dirty
+nightswatch -n 2 interrupt
+pinfo
+pinfo 
+./a.out
+pinfo
+pinfo 19873
+exit
+pinfo
+exit
+pinfo
+pinfo
+pinfo
+pinfo
+./a.out
+pinfo
+pinfo
+pinfo 19902
+pinfo
+exit
+pinfo
+exit
+pinfo
+pinfo
+./aout
+./a.out
+pinfo 
+pinfo 19929
+pinfo 19928
+exit
+pinfo
+exit
+pinfo

@@ -19,7 +19,10 @@
 #include "exec.h"
 #include <sys/wait.h>
 #include "backchk.h"
-
+#include "watch.h"
+#include <signal.h>
+#include "history.h"
+#include <fcntl.h>
 char cwd[1000];
 
 void handle_int(int sig)
@@ -60,6 +63,7 @@ int main(int argc, char const *argv[])
 			strcpy(cwd,realpath(argv[0],NULL));
 		prompt(cwd);
 		scanf(" %[^\n]s",str);
+		w_history(str);
 		char *token = strtok_r(str, ";",&end_str),*end_token; 
 		while (token != NULL) 
 		{ 
@@ -112,6 +116,10 @@ int main(int argc, char const *argv[])
 					else if(strcmp(to1,"exit")==0)
 					{
 						exit(0);
+					}
+					else if(strcmp(to1,"nightswatch")==0)
+					{
+						watch(end_token);
 					}
 					else
 					{
