@@ -1,13 +1,14 @@
 void pinfo(char a[])
 {
-	char file1[1000],state,comm[100],file2[1000],file3[1000],buf[1000];
+	char file1[1000],state,comm[100],file2[1000],file3[1000],*buf2;
+	buf2=(char *)malloc(1000);
 	int pid=getpid();
 	int ppid,unused,mem=0;
 	if(strlen(a)==0)
 		sprintf(file3,"/proc/%d/exe",pid);
 	else
 		sprintf(file3,"/proc/%s/exe",a);
-	int i=readlink(file3,buf,1000);
+	int i=readlink(file3,buf2,1000);
 	if(strlen(a)==0)
 		sprintf(file1,"/proc/%d/stat",pid);
 	else
@@ -28,8 +29,8 @@ void pinfo(char a[])
 	FILE *f1=fopen(file2,"r");
 	fscanf(f1,"%d %d",&mem,&unused);
 	printf("memory -- %d\n",mem);
-	buf[strlen(buf)]='\0';
-	printf("Executable Path -- %s\n",buf);
+	buf2[strlen(buf2)]='\0';
+	printf("Executable Path -- %s\n",buf2);
 	fclose(f);
 	fclose(f1);
 }

@@ -1,8 +1,18 @@
-void whandler(int sig)
-{
-	printf("%d\n",sig );
-}
+#include <termios.h>
+#include <stdbool.h>
+#include <sys/ioctl.h>
 
+bool keyDown() {
+    struct termios oldt, newt;
+    int bytes;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ioctl(STDIN_FILENO, FIONREAD, &bytes);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return bytes > 0;
+}
 void watch(char a[])
 {
 	int p=0,t;
@@ -61,6 +71,13 @@ void watch(char a[])
 				char c;
 				while(1)
 				{
+					if(keyDown())
+					{
+						char c=getchar();
+						printf("\n");
+						if(c=='q')
+							return;
+					}
 					char str[1000];
 					int l=0;
 					static int co=0;
@@ -75,8 +92,22 @@ void watch(char a[])
 							to1=strtok(NULL," ");
 							co++;
 						}
+						if(keyDown())
+						{
+							char c=getchar();
+							printf("\n");
+							if(c=='q')
+								return;
+						}
 					}
 					printf("\n");
+					if(keyDown())
+					{
+						char c=getchar();
+						printf("\n");
+						if(c=='q')
+							return;
+					}
 					while(!feof(f))
 					{
 						fgets(str,1000,f);
@@ -89,19 +120,26 @@ void watch(char a[])
 								printf("%s\t",to1 );
 								to1=strtok(NULL," ");
 							}
-							printf("\n");
+							if(keyDown())
+							{
+								char c=getchar();
+								printf("\n");
+								if(c=='q')
+									return;
+							}
 						}
 						l++;
 					}
+					printf("\n");
 					pp++;
-					// if(kbhit())
-					// {
-						// c=getc(stdin);
-						// if(c=='q')
-						// 	break;
+					if(keyDown())
+					{
+						char c=getchar();
+						printf("\n");
+						if(c=='q')
+							return;
+					}
 					sleep(t);
-					// }
-					// printf("%i\n",b );
 				}
 			}
 			else
@@ -110,6 +148,13 @@ void watch(char a[])
 				char c;
 				while(1)
 				{
+					if(keyDown())
+					{
+						char c=getchar();
+						printf("\n");
+						if(c=='q')
+							return;
+					}
 					char str[1000];
 					int l=0;
 					static int co=0;
@@ -123,22 +168,34 @@ void watch(char a[])
 							for(int i=0;i<3;i++)
 							{
 								if(i!=0)
-									printf("%s ",to1 );
+									printf("%s",to1 );
 								to1=strtok(NULL," ");
 							}
+							if(keyDown())
+							{
+								char c=getchar();
+								printf("\n");
+								if(c=='q')
+									return;
+							}
+						}
+						if(keyDown())
+						{
+							char c=getchar();
 							printf("\n");
+							if(c=='q')
+								return;
 						}
 						l++;
 					}
-					// if(_	kbhit())
-					// {
-						// c=getc(stdin);
-						// if(c=='q')
-							// break;
-					// interrupt(SIG_IRQ1,whandler);
-					// }
+					if(keyDown())
+					{
+						char c=getchar();
+						printf("\n");
+						if(c=='q')
+							return;
+					}
 					sleep(t);
-					// printf("%i\n",b );
 				}
 			}
 		}

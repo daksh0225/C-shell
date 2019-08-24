@@ -137,3 +137,172 @@ exit
 pinfo
 exit
 pinfo
+pwd
+echo hello
+cd ..
+ls -l
+cd ~
+cd ..
+pinfo
+pinfo
+pinfo
+pinfo
+pinfo
+nightswatch -n 2 interrupt
+nightswatch -2 n dirty
+nightswatch -n 2 dirty
+q
+nightswatch -n 2 dirty
+nightswatch -n 2 interrupt
+ls
+pinfo
+pinfo
+pinfo
+nightswatch -n 2 interrupt
+pinfo
+pinfo
+pinfo
+nightswatch -n 2 interrupt
+pinfo
+./a.out
+pinfo
+pinfo 4118
+exit
+ls
+pinfo
+ls -l
+ls -l test
+exit
+emacs &
+emacs &
+emacs &
+emacs &
+emacs
+emacs &
+emacs
+cd /dev
+cd /home/daksh0225
+cd /home/daksh0225
+emacs &
+emacs
+pwd
+echo hello
+exit
+history
+history
+cat cmd.txt
+history
+history
+history
+history
+history 5
+history
+cd ..
+history
+hellohistoryhell
+history
+Ð›õÀýcd ..
+y
+Ð›õÀýls -l
+y
+Ð›õÀýhell
+cd ..
+history
+exit
+ls
+cd
+cd
+cd
+ls
+ls
+cd
+ls
+ls
+cd
+ls
+ls -l
+cd ..
+cat cm	
+cat cmd.txt
+exit
+ls
+cd ..
+history
+history
+exit
+history
+ls -l
+history
+exit
+ls
+ls
+history
+ls
+ls
+ls
+ls
+ls -la
+cat cmd.txt
+exit
+ls -la
+cd ..
+cd /dec
+history 5
+history 5
+cd test
+history
+exit
+history
+exit
+history 3
+exit
+ls
+cd ~
+cd c cc c
+cd ..
+ls
+ls -l
+nightswatch -n 2 interrupt
+nightswatch -n 2 dirty
+pinfo
+exit
+nightswatch -n 2 dirty
+gcc sh	
+nightswatch 0n 2 dirty
+nightswatch -n 2 dirty
+nightswatch -n 2 interrupt
+nightswatch -n 2 interrupt
+ls
+history
+history
+cd ..
+ls -la
+history 5
+ls
+ls -l
+cd ..
+history
+history 6
+exit
+ls
+history
+cat cmd.txt
+exit
+ls
+pwd
+echo hello
+cd ..
+ls
+ls -l
+pinfo
+emacs &
+emacs
+exit
+cd ..
+ls
+wpwd
+pwd
+nightswatch -n 2 dirty
+nightswatch -n 2 interrupt
+history
+exit

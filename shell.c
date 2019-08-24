@@ -23,7 +23,10 @@
 #include <signal.h>
 #include "history.h"
 #include <fcntl.h>
-char cwd[1000];
+#include <termios.h>
+#include <stdbool.h>
+#include <sys/ioctl.h>
+char cwd[1000],pname[100000][50];
 
 void handle_int(int sig)
 {
@@ -32,8 +35,7 @@ void handle_int(int sig)
 	char* exit=(char *)malloc(1000);
 	char* estatus=(char *)malloc(1000);
 	pid=waitpid(0,&status,WNOHANG);
-	printf("%d\n",pid );
-	sprintf(exit,"\npid %d exited.\n",pid);
+	sprintf(exit,"\n%s with pid %d exited.\n",pname[pid],pid);
 	if(WIFEXITED(status))
 	{
 		int ret=WEXITSTATUS(status);
@@ -46,9 +48,9 @@ void handle_int(int sig)
 	{
 		write(2,exit,strlen(exit));
 		write(2,estatus,strlen(estatus));
+		prompt(cwd);
 	}
 	free(exit);
-	prompt(cwd);
 	return;
 }
 
@@ -63,7 +65,12 @@ int main(int argc, char const *argv[])
 			strcpy(cwd,realpath(argv[0],NULL));
 		prompt(cwd);
 		scanf(" %[^\n]s",str);
-		w_history(str);
+		//history(str,cwd);
+		char *cstr;
+		cstr=(char *)malloc(1000);
+		cstr=str;
+		w_history(cstr);
+		// history(cstr,cwd);
 		char *token = strtok_r(str, ";",&end_str),*end_token; 
 		while (token != NULL) 
 		{ 
@@ -121,6 +128,10 @@ int main(int argc, char const *argv[])
 					{
 						watch(end_token);
 					}
+					else if(strcmp(to1,"history")==0)
+					{
+						d_history(end_token);
+					}
 					else
 					{
 						pid_t pid=fork();
@@ -137,6 +148,7 @@ int main(int argc, char const *argv[])
 							}
 							else
 							{
+								strcpy(pname[pid],token);
 								signal(SIGCHLD,handle_int);
 							}
 						}
