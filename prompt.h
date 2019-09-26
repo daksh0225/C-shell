@@ -73,6 +73,8 @@ void prompt(const char *file)
 		pp=cwd;
 	int ll=strlen(pp);
 	pp[ll]='\0';
-	printf("<%s@%s:%s>", userbuffer,hostbuffer,pp);
+	char buf[1000];
+	sprintf(buf,"<%s@%s:%s>", userbuffer,hostbuffer,pp);
+	write(1,buf,strlen(buf));
 	fflush(stdout);
 }

@@ -2,7 +2,7 @@ void pinfo(char a[])
 {
 	char file1[1000],state,comm[100],file2[1000],file3[1000],*buf2;
 	buf2=(char *)malloc(1000);
-	int pid=getpid();
+	int pid=getppid();
 	int ppid,unused,mem=0;
 	if(strlen(a)==0)
 		sprintf(file3,"/proc/%d/exe",pid);
