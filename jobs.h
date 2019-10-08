@@ -102,6 +102,7 @@ void overkill(char *a)
           if(type[procs[i]]==0 && strlen(jobname[procs[i]])!=0)
           {
                kill(procs[i],9);
+               type[procs[i]]=1;
           }
      }    
 }

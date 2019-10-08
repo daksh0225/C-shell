@@ -30,72 +30,8 @@
 #include "redirchk.h"
 #include "env.h"
 #include "jobs.h"
+#include "signals.h"
 #include "fg_bg.h"
-
-void handle_int(int sig)
-{
-	// npro--;
-	char str[1000];
-	pid_t pid;
-	int status;
-	char* exit=(char *)malloc(1000);
-	char* estatus=(char *)malloc(1000);
-	pid=waitpid(0,&status,WNOHANG);
-	type[pid]=1;
-	sprintf(exit,"%s with pid %d exited ",pname[pid],pid);
-	// strcpy(pname[pid],"");
-	if(WIFEXITED(status))
-	{
-		int ret=WEXITSTATUS(status);
-		if(ret==0)
-			sprintf(estatus, "normally.\n");
-		else
-			sprintf(estatus, "abnormally.\n");
-	}
-	else if(WIFSIGNALED(status))
-	{
-		int ret=WEXITSTATUS(status);
-		if(ret==0)
-			sprintf(estatus,"abnormally.\n");
-		else
-			sprintf(estatus,"normally.\n");
-	}
-	if(pid>0)
-	{
-		write(2,exit,strlen(exit));
-		write(2,estatus,strlen(estatus));
-		prompt(cwd);	
-		fflush(stdout);
-	}
-	free(exit);
-	return;
-}
-
-void handle_sigint(int sig)
-{
-	printf("\n");
-	return;
-}
-
-void check_back()
-{
-	int status;
-	pid_t wpid;
-	while((wpid = waitpid(-1, &status, WNOHANG)) > 0) 
-	{
-		{
-			for(int j = 0; j < npro; j++)
-			{
-				if(procs[j] == wpid)
-				{
-					type[procs[j]]=1;
-					printf("%s [%d]+	Done\t PID %d\n",pname[procs[j]],procs[j], wpid);
-					fflush(stdout);
-				}
-			}
-		}
-	}
-}
 
 int main(int argc, char const *argv[])
 {
@@ -104,10 +40,12 @@ int main(int argc, char const *argv[])
 	{
 		char str[1000],*end_str;
 		int ss=0,flagecho=0,flagcd=0,flagls=0,tempout,tempin,pp=0,pp1=0,parflag=0;
+		signal(SIGTSTP,handle_sigZ);
 		signal(SIGINT,handle_sigint);
 		check_back();
 		if(strlen(cwd)==0)
 			strcpy(cwd,realpath(argv[0],NULL));
+		fflush(stdout);
 		prompt(cwd);
 		scanf(" %[^\n]s",str);
 		char *cstr;
@@ -129,9 +67,68 @@ int main(int argc, char const *argv[])
 			int out=dup(1);
 			while(token1!=NULL)
 			{
-				int pro;
+				// int pro;
+				output_file_len=0;
+				int oo=out_redir(token1),ii=in_redir(token1);
 				if(fflag)
+				{
 					pro=-1;
+					char  temptoken[1000];
+					dup2(in,0);
+					close(in);
+					if(oo)
+					{
+						int temp_len = 0;
+						for(int i=0;i<strlen(token1);i++)
+						{
+							if(token1[i]=='>' || token1[i] == '<')
+								break;
+							else
+							{
+								temptoken[temp_len++] = token1[i];
+							}								
+						}
+						strcpy(token1, temptoken);
+						token1[temp_len] = '\0';
+						if(oo==1)
+						{
+							int fd=open(output_file,O_WRONLY|O_CREAT|O_TRUNC,0644);
+							out=dup(fd);
+							close(fd);
+						}
+						else if(oo==2)
+						{
+							int fd=open(output_file,O_WRONLY|O_CREAT|O_APPEND,0644);
+							out=dup(fd);
+							close(fd);
+						}
+					}
+					if(ii)
+					{
+						int temp_len = 0;
+						for(int i=0;i<strlen(token1);i++)
+						{
+							if(token1[i]=='<'|| token1[i]=='>')
+								break;
+							else
+							{
+								temptoken[temp_len++] = token1[i];
+							}								
+						}
+						strcpy(token1, temptoken);
+						token1[temp_len] = '\0';
+						if(ii==1)
+						{
+							int fd=open(output_file,O_RDONLY,0644);
+							dup2(fd,0);
+							close(fd);
+						}
+					}
+					dup2(out,1);
+					// dup2(in,0);
+					close(out);
+					// close(in);
+				}
 				else
 				{
 					if (strcmp(token1,"quit")==0)
@@ -141,7 +138,59 @@ int main(int argc, char const *argv[])
 					dup2(in,0);
 					close(in);
 					if(strlen(end_token)==0)
+					{
 						out=dup(temp_stdout);
+						if(oo)
+						{
+							char  temptoken[1000];
+							int temp_len = 0;
+							for(int i=0;i<strlen(token1);i++)
+							{
+								if(token1[i]=='>')
+									break;
+								else
+								{
+									temptoken[temp_len++] = token1[i];
+								}								
+							}
+							strcpy(token1, temptoken);
+							token1[temp_len] = '\0';
+							if(oo==1)
+							{
+								int fd=open(output_file,O_WRONLY|O_CREAT|O_TRUNC,0644);
+								out=dup(fd);
+								close(fd);
+							}
+							else if(oo==2)
+							{
+								int fd=open(output_file,O_WRONLY|O_CREAT|O_APPEND,0644);
+								out=dup(fd);
+								close(fd);
+							}
+						}
+						if(ii)
+						{
+							char  temptoken[1000];
+							int temp_len = 0;
+							for(int i=0;i<strlen(token1);i++)
+							{
+								if(token1[i]=='<')
+									break;
+								else
+								{
+									temptoken[temp_len++] = token1[i];
+								}								
+							}
+							strcpy(token1, temptoken);
+							token1[temp_len] = '\0';
+							if(ii==1)
+							{
+								int fd=open(output_file,O_RDONLY,0644);
+								dup2(fd,0);
+								close(fd);
+							}
+						}
+					}
 					else
 					{
 						int fd[2];
@@ -189,10 +238,9 @@ int main(int argc, char const *argv[])
 						}
 						if(ss==0)
 						{
-							int p=isredir(end_token1);
 							if(strcmp(to1,"pwd")==0)
 							{
-								pwd(end_token1,p);
+								pwd(end_token1);
 							}
 							else if(strcmp(to1,"echo")==0)
 							{
@@ -250,6 +298,10 @@ int main(int argc, char const *argv[])
 							{
 								bg(end_token1);
 							}
+							else if(strcmp(to1,"fg")==0)
+							{
+								fg(to1,end_token1);
+							}
 							// else if(strcmp(to1,"history")==0)
 							// {
 							// 	d_history(end_token);
@@ -258,10 +310,9 @@ int main(int argc, char const *argv[])
 							{
 								// if(pro==-1)
 								{
-									pid_t pid=fork();
+									pid=fork();
 									int status;
 									char *chk_token=end_token1;
-									pp1=isredir(chk_token);
 									if(pp)
 									{
 										if(pid==0)
@@ -276,38 +327,25 @@ int main(int argc, char const *argv[])
 											npro++;
 											strcpy(jobname[pid],token);
 											strcpy(pname[pid],token);
-											signal(SIGCHLD,handle_int);
-										}
-									}
-									else if(pp1)
-									{
-										if(pid==0)
-										{
-											// setpgid(0,0);
-											exec1(to1,end_token1);
-											exit(0);
-										}
-										else
-										{
-											waitpid(pid,&status,0);
 										}
 									}
 									else
 									{
 										if(pid==0)
 										{
-											// setpgid(0,0);
 											exec(to1,end_token1);
 											exit(0);
 										}
 										else
 										{
-											waitpid(pid,&status,0);
+											fprocs[fnpro]=pid;
+											fnpro++;
+											strcpy(fjobname[pid],token);
+											strcpy(fpname[pid],token);
+											waitpid(pid,&status,WUNTRACED);
 										}
 									}
 								}
-								// else
-									// exec(to1,end_token1);
 							}
 						}
 						to1=strtok_r(NULL," ",&end_token1);

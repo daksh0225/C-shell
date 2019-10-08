@@ -53,3 +53,29 @@
 
 11 backchk.h:
 	isback(): used to check whether given command is to be run in background or foreground.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+12 global.h:
+	Contains all the global variables used.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+13 fg_bg.h:
+	fg(): to bring a process from background to foreground.
+	bg(): to change a process from stopped to running.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+14 signal.h:
+	handle_signint(): interrupt handler for Ctrl-C.
+	handle_sigZ(): interrupt handler for Ctrl-Z.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+15 jobs.h:
+	jobs(): list the currently running background jobs.
+	kjob(): send a signal to a given job.
+	overkill(): kill all running background jobs.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+16 env.h:
+	setE(): set environment variable with given value.
+	unsetE(): unset given environment variable.
